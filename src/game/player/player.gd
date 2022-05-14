@@ -21,6 +21,6 @@ func _process(delta : float) -> void:
 	if Input.is_action_pressed("player_left"):
 		direction += Vector2.LEFT
 	
-	print(direction)
+	direction = direction * speed
 	
-	move_and_collide(direction.normalized() * speed * delta)
+	move_and_slide(direction)

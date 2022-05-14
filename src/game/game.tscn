@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/game/player/player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/game/bullet/bullet.tscn" type="PackedScene" id=2]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -46,6 +47,11 @@ position = Vector2( 128, 300 )
 
 [node name="Ping" parent="World" instance=ExtResource( 1 )]
 position = Vector2( 896, 300 )
+scale = Vector2( -1, 1 )
+
+[node name="Bullet" parent="World" instance=ExtResource( 2 )]
+position = Vector2( 501, 294 )
+applied_force = Vector2( 0, 0 )
 
 [node name="HUD" type="Control" parent="."]
 anchor_right = 1.0
