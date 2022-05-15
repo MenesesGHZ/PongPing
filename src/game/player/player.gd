@@ -3,11 +3,18 @@ extends KinematicBody2D
 ## Player Class
 
 
+
 ## Preloads
 const Bullet = preload("res://src/game/bullet/bullet.tscn")
 
 
+
 ## Enums
+enum PlayerStates {
+	IDLE,
+	DYING,
+}
+
 enum PlayerTypes {
 	PONG,
 	PING,
@@ -15,6 +22,8 @@ enum PlayerTypes {
 
 enum AiTypes {
 	NONE,
+	QLEARNING,
+	QLEARNING_PLUS,
 }
 
 
@@ -24,6 +33,8 @@ export(PlayerTypes) var player_type := PlayerTypes.PONG setget set_player_type
 
 export(AiTypes) var ai_type := AiTypes.NONE
 
+export(int, 1, 100) var life_points := 1
+
 export var move_speed := 500.0
 
 export var rotation_speed := 10
@@ -31,8 +42,17 @@ export var rotation_speed := 10
 
 
 ## Private Variables
+var _player_state : int = PlayerStates.IDLE setget _set_player_state
+
 var _bullets := []
-var life_points = 1
+
+
+
+## OnReady Variables
+onready var animation_player : AnimationPlayer = get_node("AnimationPlayer")
+
+onready var bullet_spawn : Position2D = get_node("BulletSpawn")
+
 
 
 ## Built-In Virtual Methods
@@ -46,7 +66,7 @@ func _ready() -> void:
 		_bullets.append(bullet)
 
 func _process(delta : float) -> void:
-	if Engine.editor_hint:
+	if Engine.editor_hint or _player_state == PlayerStates.DYING:
 		return
 	
 	var direction := Vector2.ZERO
@@ -89,23 +109,39 @@ func set_player_type(new_value : int) -> void:
 			rotation_degrees = -180
 
 
+func set_life_points(points: int) -> void:
+	life_points -= 1
+	if life_points <= 0:
+		_set_player_state(PlayerStates.DYING)
+
+
 func can_shoot() -> bool:
 	return _bullets.size() > 0
 
 
-func substract_life_points(points: int) -> void:
-	life_points -= 1
-	if life_points == 0:
-		print("GAME OVER!!!") # TODO: FUCK U
-
 func shoot() -> void:
 	if not can_shoot():
 		return
+	
 	var bullet = _bullets.pop_front()
 	get_parent().add_child(bullet)
 	bullet.particles.set_amount(bullet.particles.amount)
 	bullet.particles.set_emitting(true)
-	bullet.global_position = get_node("BulletSpawn").global_position
+	bullet.global_position = bullet_spawn.global_position
 	var impulse = bullet.compute_impulse(rotation_degrees)
 	bullet.particles.direction = impulse * -1
 	bullet.apply_impulse(Vector2(0, 0), impulse)
+
+
+
+## Private Methods
+func _set_player_state(new_value : int) -> void:
+	_player_state = new_value
+	match _player_state:
+		PlayerStates.IDLE:
+			animation_player.play("RESET")
+		PlayerStates.DYING:
+			animation_player.play("die")
+			yield(animation_player, "animation_finished")
+			life_points = 1
+			_set_player_state(PlayerStates.IDLE)
