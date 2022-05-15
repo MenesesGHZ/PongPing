@@ -18,9 +18,22 @@ onready var main_menu : ColorRect = get_node("HUD/MainMenu")
 
 
 
+## Built-In Virutal Methods
+func _ready() -> void:
+	_set_state(States.MAIN_MENU)
+
+
+func _process(delta : float) -> void:
+	if Input.is_action_just_released("ui_cancel"):
+		if _state == States.PLAYING:
+			_set_state(States.MAIN_MENU)
+
+
+
 ## Private Methods
 func _set_state(new_value : int) -> void:
 	_state = new_value
+	get_tree().paused = _state == States.MAIN_MENU
 	main_menu.visible = _state == States.MAIN_MENU
 
 
