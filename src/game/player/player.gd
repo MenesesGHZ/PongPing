@@ -4,6 +4,11 @@ extends KinematicBody2D
 
 
 
+## Signals
+signal died(this)
+
+
+
 ## Preloads
 const Bullet = preload("res://src/game/bullet/bullet.tscn")
 
@@ -134,6 +139,7 @@ func hit() -> void:
 		return
 	
 	_set_player_state(PlayerStates.DYING)
+	emit_signal("died", self)
 
 
 

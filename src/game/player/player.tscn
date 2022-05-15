@@ -202,6 +202,7 @@ _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 1, Vector2( 0.490196, 1 ), -2.71313, -2.
 radius = 38.0
 
 [node name="Player" type="KinematicBody2D" groups=["Players"]]
+rotation = 3.14159
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true
