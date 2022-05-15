@@ -16,11 +16,14 @@ var _state : int = States.MAIN_MENU setget _set_state
 ## OnReady Variables
 onready var main_menu : ColorRect = get_node("HUD/MainMenu")
 
+onready var controls : ColorRect = get_node("HUD/Controls")
+
 
 
 ## Built-In Virutal Methods
 func _ready() -> void:
 	_set_state(States.MAIN_MENU)
+	controls.visible = false
 
 
 func _process(delta : float) -> void:
@@ -33,6 +36,8 @@ func _process(delta : float) -> void:
 ## Private Methods
 func _set_state(new_value : int) -> void:
 	_state = new_value
+	
+	controls.visible = false
 	get_tree().paused = _state == States.MAIN_MENU
 	main_menu.visible = _state == States.MAIN_MENU
 
@@ -51,3 +56,11 @@ func _on_AIVSAI_pressed():
 
 func _on_AIVSAIPlus_pressed():
 	_set_state(States.PLAYING)
+
+
+func _on_Controls_pressed():
+	controls.visible = true
+
+
+func _on_Controls_Close_pressed():
+	controls.visible = false
