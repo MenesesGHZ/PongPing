@@ -32,7 +32,7 @@ export var rotation_speed := 10
 
 ## Private Variables
 var _bullets := []
-var lifes = 1
+var life_points = 1
 
 
 ## Built-In Virtual Methods
@@ -86,6 +86,11 @@ func set_player_type(new_value : int) -> void:
 func can_shoot() -> bool:
 	return _bullets.size() > 0
 
+
+func substract_life_points(points: int) -> void:
+	life_points -= 1
+	if life_points == 0:
+		print("GAME OVER!!!") # TODO: FUCK U
 
 func shoot() -> void:
 	if not can_shoot():
