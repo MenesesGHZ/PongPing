@@ -97,6 +97,9 @@ func shoot() -> void:
 		return
 	var bullet = _bullets.pop_front()
 	get_parent().add_child(bullet)
+	bullet.particles.set_amount(bullet.particles.amount)
+	bullet.particles.set_emitting(true)
 	bullet.global_position = get_node("BulletSpawn").global_position
 	var impulse = bullet.compute_impulse(rotation_degrees)
+	bullet.particles.direction = impulse * -1
 	bullet.apply_impulse(Vector2(0, 0), impulse)

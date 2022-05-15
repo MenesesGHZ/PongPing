@@ -3,7 +3,7 @@ extends RigidBody2D
 var initial_impulse = 700
 var bounce_counter = 0
 var player_owner
-
+onready var particles = get_node("CPUParticles2D")
 
 func _ready():
 	pass
@@ -19,8 +19,11 @@ func _on_body_entered(body):
 	
 func _on_body_exited(body):
 	bounce_counter += 1
+
 	if bounce_counter == 3:
 		get_parent().remove_child(self)
+		particles.set_amount(particles.amount)
+		particles.set_emitting(false)
 		player_owner._bullets.append(self)
 		linear_velocity = Vector2(0, 0)
 		rotation_degrees = 0
