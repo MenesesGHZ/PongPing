@@ -13,7 +13,7 @@ radius = 16.0
 [sub_resource type="Curve" id=3]
 _data = [ Vector2( 0.0422018, 1 ), 0.0, -0.551097, 0, 1, Vector2( 0.955963, 0.496429 ), -0.551097, 0.0, 1, 0 ]
 
-[node name="Bullet" type="RigidBody2D"]
+[node name="Bullet" type="RigidBody2D" groups=["Bullets"]]
 physics_material_override = SubResource( 2 )
 gravity_scale = 0.0
 contacts_reported = 20
