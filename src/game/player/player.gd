@@ -146,8 +146,6 @@ func hit() -> void:
 	_set_player_state(PlayerStates.DYING)
 	emit_signal("died", self)
 	died = true
-	
-
 
 
 ## Private Methods

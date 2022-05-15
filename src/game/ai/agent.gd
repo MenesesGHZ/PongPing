@@ -2,9 +2,17 @@ class_name Agent
 extends Node
 
 var player
-
 onready var q_learning := get_parent()
 
+var policy = {}
+var sequence = [
+	0, # state 1 
+	0, # action 1
+	0, # reward 2
+	0, # state 2
+	0, # action 2
+	0  # reward 3
+]
 var actions = [
 	"up",
 	"down",
