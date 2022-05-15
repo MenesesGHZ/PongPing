@@ -14,7 +14,7 @@ func _process(_delta: float) -> void:
 func _on_body_entered(body):
 	var core_hitted = body.has_node("CollisionShape2D")
 	if core_hitted and body.is_in_group("Players"):
-		body.set_life_points(1)
+		body.hit()
 	
 	
 func _on_body_exited(body):

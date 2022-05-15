@@ -13,6 +13,7 @@ const Bullet = preload("res://src/game/bullet/bullet.tscn")
 enum PlayerStates {
 	IDLE,
 	DYING,
+	RESPAWN,
 }
 
 enum PlayerTypes {
@@ -32,8 +33,6 @@ enum AiTypes {
 export(PlayerTypes) var player_type := PlayerTypes.PONG setget set_player_type
 
 export(AiTypes) var ai_type := AiTypes.NONE
-
-export(int, 1, 100) var life_points := 1
 
 export var move_speed := 500.0
 
@@ -109,12 +108,6 @@ func set_player_type(new_value : int) -> void:
 			rotation_degrees = -180
 
 
-func set_life_points(points: int) -> void:
-	life_points -= 1
-	if life_points <= 0:
-		_set_player_state(PlayerStates.DYING)
-
-
 func can_shoot() -> bool:
 	return _bullets.size() > 0
 
@@ -133,6 +126,13 @@ func shoot() -> void:
 	bullet.apply_impulse(Vector2(0, 0), impulse)
 
 
+func hit() -> void:
+	if _player_state == PlayerStates.DYING:
+		return
+	
+	_set_player_state(PlayerStates.DYING)
+
+
 
 ## Private Methods
 func _set_player_state(new_value : int) -> void:
@@ -143,5 +143,8 @@ func _set_player_state(new_value : int) -> void:
 		PlayerStates.DYING:
 			animation_player.play("die")
 			yield(animation_player, "animation_finished")
-			life_points = 1
+			_set_player_state(PlayerStates.RESPAWN)
+		PlayerStates.RESPAWN:
+			animation_player.play("respawn")
+			yield(animation_player, "animation_finished")
 			_set_player_state(PlayerStates.IDLE)
