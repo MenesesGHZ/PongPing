@@ -70,6 +70,12 @@ func _process(delta : float) -> void:
 	direction = direction * move_speed
 	
 	move_and_slide(direction)
+	
+	if player_type == PlayerTypes.PONG:
+		position.x = 128
+	else:
+		position.x = 896
+	position.y = clamp(position.y, 80, 520)
 
 
 
