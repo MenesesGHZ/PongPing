@@ -17,18 +17,25 @@ func _ready():
 
 func Q(agent, state) -> String:
 	var s_t = parse_state(state)
+	var q_sa
 	if not s_t in agent.policy and randf() > e: 
 		q_sa = randi() % 10 - 5
 		agent.policy[s_t] = {}
 		action = agent.actions[randi() % agent.actions.size()]
 	else:
+		q_sa = agent.policy[st][]
 		value = argmax_Q_sa(agent, state)
-		state = value[0]
+		max_q_sa = value[0]
 		action = value[1]
 	agent.policy[agent.sequence[0]] \
 				[agent.sequence[1]] += \
-				q_sa + alpha * (agent.sequence[2] + argmax_Q_sa(s_t) - q_sa)
-	
+				q_sa + alpha * (agent.sequence[2] + max_q_sa - q_sa)
+	agent.sequence[0] = sequence[3]
+	agent.sequence[1] = sequence[4]
+	agent.sequence[2] = sequence[5]
+	agent.sequence[3] = state
+	agent.sequence[4] = action
+	agent.sequence[5] = ""
 	return action
 	
 func argmax_Q_sa(agent, state : String) -> Array:
