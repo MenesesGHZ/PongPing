@@ -32,7 +32,7 @@ export var rotation_speed := 10
 
 ## Private Variables
 var _bullets := []
-
+var lifes = 1
 
 
 ## Built-In Virtual Methods
@@ -92,5 +92,6 @@ func shoot() -> void:
 		return
 	var bullet = _bullets.pop_front()
 	get_parent().add_child(bullet)
-	bullet.position = position
-	bullet.rotation = 0
+	bullet.global_position = get_node("BulletSpawn").global_position
+	var impulse = bullet.compute_impulse(rotation_degrees)
+	bullet.apply_impulse(Vector2(0, 0), impulse)
