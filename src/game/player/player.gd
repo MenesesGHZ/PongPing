@@ -3,6 +3,9 @@ extends KinematicBody2D
 ## Player Class
 
 
+## Preloads
+const Bullet = preload("res://src/game/bullet/bullet.tscn")
+
 
 ## Enums
 enum PlayerTypes {
@@ -38,9 +41,9 @@ func _ready() -> void:
 		return
 	
 	for i in range(3):
-		# TODO Spawn Bullet
-		pass
-
+		var bullet = Bullet.instance()
+		bullet.player_owner = self
+		_bullets.append(bullet)
 
 func _process(delta : float) -> void:
 	if Engine.editor_hint:
@@ -87,5 +90,7 @@ func can_shoot() -> bool:
 func shoot() -> void:
 	if not can_shoot():
 		return
-	
-	# TODO Spawn Bullet
+	var bullet = _bullets.pop_front()
+	get_parent().add_child(bullet)
+	bullet.position = position
+	bullet.rotation = 0
