@@ -47,7 +47,8 @@ position = Vector2( 128, 300 )
 
 [node name="Ping" parent="World" instance=ExtResource( 1 )]
 position = Vector2( 896, 300 )
-scale = Vector2( -1, 1 )
+rotation = -3.14159
+player_type = 1
 
 [node name="Bullet" parent="World" instance=ExtResource( 2 )]
 position = Vector2( 501, 294 )
