@@ -16,10 +16,17 @@ func Q():
 	pass
 	
 func _process(delta):
-	print(generate_state())	
-
-func compute_reward():
 	pass
+
+
+func compute_reward(state: Array):
+	if(state[6]):
+		return 10
+	if(state[5]):
+		return -10
+	if(state[4]):
+		return 1
+	return -0.5 
 
 func generate_state():
 	var state = []

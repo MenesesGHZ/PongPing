@@ -36,11 +36,13 @@ func _on_body_entered(body : Node):
 	var core_hitted = body.has_node("CollisionShape2D")
 	if core_hitted and body.is_in_group("Players"):
 		body.hit()
-
+		player_owner.won = true
+	if body.is_in_group("Shields"): 
+		body.get_parent().shielded = true
+	
 
 func _on_body_exited(body : Node):
 	_bounce_counter += 1
-	
 	if _bounce_counter == 3:
 		get_parent().remove_child(self)
 		particles.set_amount(particles.amount)

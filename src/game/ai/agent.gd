@@ -19,7 +19,13 @@ func generate_state() -> Array:
 		player.position.y,
 		player.rotation,
 		player._bullets.size(),
+		int(player.shielded),
+		int(player.died),
+		int(player.won)
 	]
+	player.shielded = false
+	player.died = false
+	player.won = false
 	return state
 	
 

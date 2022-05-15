@@ -47,6 +47,12 @@ export(int, 0, 100) var bullets := 3
 
 
 
+## Public Variables
+var died := false
+
+var shielded := false
+
+
 ## Private Variables
 var _player_state : int = PlayerStates.IDLE setget _set_player_state
 
@@ -137,9 +143,10 @@ func shoot() -> void:
 func hit() -> void:
 	if _player_state == PlayerStates.DYING:
 		return
-	
 	_set_player_state(PlayerStates.DYING)
 	emit_signal("died", self)
+	died = true
+	
 
 
 
