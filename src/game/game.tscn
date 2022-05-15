@@ -71,16 +71,18 @@ anchor_right = 0.5
 anchor_bottom = 1.0
 margin_left = -128.0
 margin_right = 128.0
+alignment = 1
 
 [node name="icon" type="TextureRect" parent="HUD/MainMenu/VBoxContainer"]
 margin_right = 256.0
-margin_bottom = 256.0
+margin_bottom = 298.0
 rect_min_size = Vector2( 256, 256 )
+size_flags_vertical = 3
 texture = ExtResource( 2 )
 stretch_mode = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HUD/MainMenu/VBoxContainer"]
-margin_top = 260.0
+margin_top = 302.0
 margin_right = 256.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
@@ -88,27 +90,27 @@ size_flags_vertical = 3
 alignment = 1
 
 [node name="P1VSP2" type="ToolButton" parent="HUD/MainMenu/VBoxContainer/VBoxContainer"]
-margin_top = 120.0
+margin_top = 99.0
 margin_right = 256.0
-margin_bottom = 142.0
+margin_bottom = 121.0
 text = "P1 VS P2"
 
 [node name="P1VSAI" type="ToolButton" parent="HUD/MainMenu/VBoxContainer/VBoxContainer"]
-margin_top = 146.0
+margin_top = 125.0
 margin_right = 256.0
-margin_bottom = 168.0
+margin_bottom = 147.0
 text = "P1 VS AI"
 
 [node name="AIVSAI" type="ToolButton" parent="HUD/MainMenu/VBoxContainer/VBoxContainer"]
-margin_top = 172.0
+margin_top = 151.0
 margin_right = 256.0
-margin_bottom = 194.0
+margin_bottom = 173.0
 text = "AI VS AI"
 
 [node name="AIVSAIPlus" type="ToolButton" parent="HUD/MainMenu/VBoxContainer/VBoxContainer"]
-margin_top = 198.0
+margin_top = 177.0
 margin_right = 256.0
-margin_bottom = 220.0
+margin_bottom = 199.0
 text = "AI VS AI+"
 
 [connection signal="pressed" from="HUD/MainMenu/VBoxContainer/VBoxContainer/P1VSP2" to="." method="_on_P1VSP2_pressed"]

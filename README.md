@@ -1,6 +1,6 @@
  <p align="center">
 	<a>
-		<img width="128px" src="./icon.png" alt="" />
+		<img width="128px" src="./icon.svg?sanitize=true" alt="" />
 		<h1 align="center">
 			PongPing
 		</h1>
