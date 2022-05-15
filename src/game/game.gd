@@ -14,6 +14,8 @@ var _state : int = States.MAIN_MENU setget _set_state
 
 
 ## OnReady Variables
+onready var hud : Control = get_node("HUD")
+
 onready var main_menu : ColorRect = get_node("HUD/MainMenu")
 
 onready var controls : ColorRect = get_node("HUD/Controls")
@@ -22,8 +24,9 @@ onready var controls : ColorRect = get_node("HUD/Controls")
 
 ## Built-In Virutal Methods
 func _ready() -> void:
-	_set_state(States.MAIN_MENU)
+	hud.visible = true
 	controls.visible = false
+	_set_state(States.MAIN_MENU)
 
 
 func _process(delta : float) -> void:

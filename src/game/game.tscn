@@ -54,10 +54,11 @@ shape = SubResource( 3 )
 
 [node name="Pong" parent="World" instance=ExtResource( 1 )]
 position = Vector2( 128, 300 )
+rotation = 3.14159
+bullets = 20
 
 [node name="Ping" parent="World" instance=ExtResource( 1 )]
 position = Vector2( 896, 300 )
-rotation = -3.14159
 player_type = 1
 
 [node name="HUD" type="Control" parent="."]
