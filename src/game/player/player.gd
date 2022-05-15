@@ -38,6 +38,8 @@ export var move_speed := 500.0
 
 export var rotation_speed := 10
 
+export(int, 0, 100) var bullets := 3
+
 
 
 ## Private Variables
@@ -59,10 +61,11 @@ func _ready() -> void:
 	if Engine.editor_hint:
 		return
 	
-	for i in range(3):
+	for i in range(bullets):
 		var bullet = Bullet.instance()
 		bullet.player_owner = self
 		_bullets.append(bullet)
+
 
 func _process(delta : float) -> void:
 	if Engine.editor_hint or _player_state == PlayerStates.DYING:
@@ -103,9 +106,9 @@ func set_player_type(new_value : int) -> void:
 	player_type = new_value
 	match player_type:
 		PlayerTypes.PONG:
-			rotation_degrees = 0
+			rotation = deg2rad(180)
 		PlayerTypes.PING:
-			rotation_degrees = -180
+			rotation = deg2rad(0)
 
 
 func can_shoot() -> bool:
