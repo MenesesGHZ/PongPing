@@ -27,7 +27,21 @@ export var rotation_speed := 10
 
 
 
+## Private Variables
+var _bullets := []
+
+
+
 ## Built-In Virtual Methods
+func _ready() -> void:
+	if Engine.editor_hint:
+		return
+	
+	for i in range(3):
+		# TODO Spawn Bullet
+		pass
+
+
 func _process(delta : float) -> void:
 	if Engine.editor_hint:
 		return
@@ -39,12 +53,8 @@ func _process(delta : float) -> void:
 		
 		if Input.is_action_pressed(_player_type + "_up"):
 			direction += Vector2.UP
-#		if Input.is_action_pressed(_player_type + "_right"):
-#			direction += Vector2.RIGHT
 		if Input.is_action_pressed(_player_type + "_down"):
 			direction += Vector2.DOWN
-#		if Input.is_action_pressed(_player_type + "_left"):
-#			direction += Vector2.LEFT
 		
 		if Input.is_action_pressed(_player_type + "_right"):
 			rotate(deg2rad(rotation_speed))
@@ -52,7 +62,7 @@ func _process(delta : float) -> void:
 			rotate(deg2rad(-rotation_speed))
 		
 		if Input.is_action_just_released(_player_type + "_shoot"):
-			print("SHOOT")
+			shoot()
 	
 	direction = direction * move_speed
 	
@@ -68,3 +78,14 @@ func set_player_type(new_value : int) -> void:
 			rotation_degrees = 0
 		PlayerTypes.PING:
 			rotation_degrees = -180
+
+
+func can_shoot() -> bool:
+	return _bullets.size() > 0
+
+
+func shoot() -> void:
+	if not can_shoot():
+		return
+	
+	# TODO Spawn Bullet
