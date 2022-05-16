@@ -6,12 +6,12 @@ onready var q_learning := get_parent()
 
 var policy = {}
 var sequence = [
-	0, # state 1 
-	0, # action 1
-	0, # reward 2
-	0, # state 2
-	0, # action 2
-	0  # reward 3
+	null, # state 1 
+	null, # action 1
+	null, # reward 2
+	null, # state 2
+	null, # action 2
+	null  # reward 3
 ]
 var actions = [
 	"up",
@@ -36,6 +36,11 @@ func generate_state() -> Array:
 	player.won = false
 	return state
 	
+func pick_random_action() -> String:
+	return actions[randi() % actions.size()]
+	
+func valid_sequence() -> bool:
+	return null in sequence
 
 func _process(delta: float):
 	pass

@@ -17,39 +17,46 @@ func _ready():
 
 func Q(agent, state) -> String:
 	var s_t = parse_state(state)
-	var q_sa
-	if not s_t in agent.policy and randf() > e: 
-		q_sa = randi() % 10 - 5
+	var q_sa 
+	var max_q_sa
+	var action
+	var value
+	if not s_t in agent.policy: 
 		agent.policy[s_t] = {}
-		action = agent.actions[randi() % agent.actions.size()]
-	else:
-		q_sa = agent.policy[st][]
-		value = argmax_Q_sa(agent, state)
-		max_q_sa = value[0]
-		action = value[1]
+		action = agent.pick_random_action()
+		agent.policy[s_t][action] = randi() % 10
+	
+	value = argmax_Q_sa(agent, state)
+	max_q_sa = value[0]
+	action = value[1]
+	if randf() > e:
+		action = agent.pick_random_action()
+		
+	q_sa = agent.policy[agent.sequence[0]][agent.sequence[1]]
 	agent.policy[agent.sequence[0]] \
 				[agent.sequence[1]] += \
-				q_sa + alpha * (agent.sequence[2] + max_q_sa - q_sa)
-	agent.sequence[0] = sequence[3]
-	agent.sequence[1] = sequence[4]
-	agent.sequence[2] = sequence[5]
+				alpha * (agent.sequence[2] + max_q_sa - q_sa)
+				
+	agent.sequence[0] = agent.sequence[3]
+	agent.sequence[1] = agent.sequence[4]
+	agent.sequence[2] = agent.sequence[5]
 	agent.sequence[3] = state
 	agent.sequence[4] = action
-	agent.sequence[5] = ""
+	agent.sequence[5] = compute_reward(state)
 	return action
 	
 func argmax_Q_sa(agent, state : String) -> Array:
 	var max_qs = -1000
 	var max_action = agent
-	for action in player.policy[state]:
-		if player.policy[state][action] > max_qs:
-			max_qs = player.policy[state][action]
+	for action in agent.policy[state]:
+		if agent.policy[state][action] > max_qs:
+			max_qs = agent.policy[state][action]
 			max_action = action
 	return [max_qs, max_action]
 	
 	
 func parse_state(state: Array) -> String:
-	ss = ""
+	var ss = ""
 	for s in state:
 		ss += str(s)
 	return ss
