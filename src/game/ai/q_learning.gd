@@ -23,9 +23,11 @@ func Q(agent, state) -> String:
 		agent.policy[s_t] = {}
 	
 	var action
-	if randf() > e or not action in agent.policy[s_t]:
+	var action_in_policy = action in agent.policy[s_t]
+	if randf() > e or not action_in_policy:
 		action = agent.pick_random_action()
-		agent.policy[s_t][action] = randi() % 10
+		if not action_in_policy:
+			agent.policy[s_t][action] = randi() % 10
 	
 	var value = argmax_Q_sa(agent, s_t)
 	var max_q_sa = value[0]
