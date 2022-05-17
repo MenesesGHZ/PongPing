@@ -33,20 +33,26 @@ _global_script_class_icons={
 [application]
 
 config/name="PongPing"
-run/main_scene="res://src/game/game.tscn"
+run/main_scene="res://src/main_menu/main_menu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 Session="*res://src/session.gd"
+Settings="*res://src/settings/settings.tscn"
 
 [display]
 
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 
+[global]
+
+env=false
+
 [gui]
 
+theme/custom="res://assets/theme/theme.tres"
 theme/custom_font="res://assets/fonts/cave_story.tres"
 
 [input]

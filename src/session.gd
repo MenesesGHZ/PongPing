@@ -9,6 +9,11 @@ enum StoryProgress {
 	TUTORIAL = 1,
 }
 
+enum Views {
+	MAIN_MENU,
+	GAME,
+}
+
 
 
 ## Constants
@@ -28,12 +33,16 @@ var story_progress : int = StoryProgress.NEW_GAME
 ## Private Methods
 var _new_session : Dictionary
 
+var _view : int = Views.MAIN_MENU
+
 
 
 ## Built-In Virtual Methods
 func _ready() -> void:
 	_new_session = _get_session().duplicate(true)
 	load_session()
+	# TOOD Stop resetting
+	reset()
 
 
 func _exit_tree() -> void:
@@ -74,6 +83,50 @@ func load_session(path := "user://" + NAME + "session.save") -> void:
 
 func reset() -> void:
 	_set_session(_new_session.duplicate(true))
+	save_session()
+
+
+func get_currect_view() -> int:
+	return _view
+
+
+func load_main_menu() -> void:
+	_view = Views.MAIN_MENU
+	get_tree().change_scene("res://src/main_menu/main_menu.tscn")
+	save_session()
+
+
+func load_game_pvp() -> void:
+	_view = Views.GAME
+	if story_progress == 0:
+		Settings.show()
+		story_progress = 1
+	
+	get_tree().change_scene("res://src/game/game.tscn")
+	save_session()
+
+
+func load_game_pvai() -> void:
+	_view = Views.GAME
+	get_tree().change_scene("res://src/game/game.tscn")
+	save_session()
+
+
+func load_game_aivai() -> void:
+	_view = Views.GAME
+	get_tree().change_scene("res://src/game/game.tscn")
+	save_session()
+
+
+func load_game_aivaip() -> void:
+	_view = Views.GAME
+	get_tree().change_scene("res://src/game/game.tscn")
+	save_session()
+
+
+func load_game_aipvaip() -> void:
+	_view = Views.GAME
+	get_tree().change_scene("res://src/game/game.tscn")
 	save_session()
 
 
