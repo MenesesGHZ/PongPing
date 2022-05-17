@@ -37,7 +37,7 @@ enum AiTypes {
 ## Exported Variables
 export(PlayerTypes) var player_type := PlayerTypes.PONG setget set_player_type
 
-export(AiTypes) var ai_type := AiTypes.NONE
+export(AiTypes) var ai_type : int
 
 export var move_speed := 500.0
 
@@ -49,8 +49,11 @@ export(int, 0, 100) var bullets := 3
 
 ## Public Variables
 var died := false
+
 var won := false
+
 var shielded := false
+
 
 
 ## Private Variables
@@ -86,6 +89,21 @@ func _process(delta : float) -> void:
 	
 	if ai_type == AiTypes.NONE:
 		var _player_type := "pong" if player_type == PlayerTypes.PONG else "ping"
+		
+		if Input.is_action_pressed(_player_type + "_up"):
+			direction += Vector2.UP
+		if Input.is_action_pressed(_player_type + "_down"):
+			direction += Vector2.DOWN
+		
+		if Input.is_action_pressed(_player_type + "_right"):
+			rotate(deg2rad(rotation_speed))
+		if Input.is_action_pressed(_player_type + "_left"):
+			rotate(deg2rad(-rotation_speed))
+		
+		if Input.is_action_just_released(_player_type + "_shoot"):
+			shoot()
+	elif ai_type == AiTypes.QLEARNING:
+		var _player_type := "pong" if player_type == PlayerTypes.PONG else "ping"
 		controller(
 			Input.is_action_pressed(_player_type + "_up"),
 			Input.is_action_pressed(_player_type + "_down"),
@@ -93,6 +111,9 @@ func _process(delta : float) -> void:
 			Input.is_action_pressed(_player_type + "_left"),
 			Input.is_action_just_released(_player_type + "_shoot")
 		)
+	elif ai_type == AiTypes.QLEARNING_PLUS:
+		# TODO Add Q-learning+ logic
+		pass
 	
 	if player_type == PlayerTypes.PONG:
 		position.x = 128
@@ -111,7 +132,7 @@ func controller(up: bool, down: bool, rotate_right: bool, rotate_left: bool, sho
 	if rotate_left:
 		rotate(deg2rad(-rotation_speed))
 	if shoot:
-		shoot()	
+		shoot()
 	direction = direction * move_speed
 	move_and_slide(direction)
 

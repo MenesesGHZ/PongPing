@@ -1,68 +1,55 @@
-extends Node
-## Game Class
+extends Node2D
+## Game Logic
 
 
-## Enums
-enum States {
-	MAIN_MENU,
-	PLAYING,
-	PLAYING_AIVSAI
-}
+
+## Exported Variables
+export(NodePath) var pong : NodePath setget set_pong
+
+export(NodePath) var ping : NodePath setget set_ping
+
 
 
 ## Private Variables
-var _state : int = States.MAIN_MENU setget _set_state
+var _pong
+
+var _ping
+
 
 
 ## OnReady Variables
-onready var hud : Control = get_node("HUD")
-
-onready var main_menu : ColorRect = get_node("HUD/MainMenu")
-
-onready var controls : ColorRect = get_node("HUD/Controls")
-
-
-
-## Built-In Virutal Methods
 func _ready() -> void:
-	hud.visible = true
-	controls.visible = false
-	_set_state(States.MAIN_MENU)
+	set_pong(pong)
+	set_ping(ping)
+	
+	match Session.get_currect_view():
+		Session.Views.PVP:
+			_pong.ai_type = _pong.AiTypes.NONE
+			_ping.ai_type = _ping.AiTypes.NONE
+		Session.Views.PVAI:
+			_pong.ai_type = _pong.AiTypes.NONE
+			_ping.ai_type = _ping.AiTypes.QLEARNING
+		Session.Views.AIVAI:
+			_pong.ai_type = _pong.AiTypes.QLEARNING
+			_ping.ai_type = _ping.AiTypes.QLEARNING
+		Session.Views.AIVAIP:
+			_pong.ai_type = _pong.AiTypes.QLEARNING
+			_ping.ai_type = _ping.AiTypes.QLEARNING_PLUS
+		Session.Views.AIPVAIP:
+			_pong.ai_type = _pong.AiTypes.QLEARNING_PLUS
+			_ping.ai_type = _ping.AiTypes.QLEARNING_PLUS
 
 
-func _process(delta : float) -> void:
-	if Input.is_action_just_released("ui_cancel"):
-		if _state == States.PLAYING:
-			_set_state(States.MAIN_MENU)
+## Public Methods
+func set_pong(new_value : NodePath) -> void:
+	pong = new_value
+	
+	if is_inside_tree() and not pong.is_empty():
+		_pong = get_node(pong)
 
 
-## Private Methods
-func _set_state(new_value : int) -> void:
-	_state = new_value
-	controls.visible = false
-	get_tree().paused = _state == States.MAIN_MENU
-	main_menu.visible = _state == States.MAIN_MENU
-
-
-func _on_P1VSP2_pressed():
-	_set_state(States.PLAYING)
-
-
-func _on_P1VSAI_pressed():
-	_set_state(States.PLAYING)
-
-
-func _on_AIVSAI_pressed():
-	_set_state(States.PLAYING)
-
-
-func _on_AIVSAIPlus_pressed():
-	_set_state(States.PLAYING)
-
-
-func _on_Controls_pressed():
-	controls.visible = true
-
-
-func _on_Controls_Close_pressed():
-	controls.visible = false
+func set_ping(new_value : NodePath) -> void:
+	ping = new_value
+	
+	if is_inside_tree() and not ping.is_empty():
+		_ping = get_node(ping)

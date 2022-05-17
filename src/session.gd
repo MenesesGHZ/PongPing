@@ -11,7 +11,11 @@ enum StoryProgress {
 
 enum Views {
 	MAIN_MENU,
-	GAME,
+	PVP,
+	PVAI,
+	AIVAI,
+	AIVAIP,
+	AIPVAIP,
 }
 
 
@@ -97,7 +101,7 @@ func load_main_menu() -> void:
 
 
 func load_game_pvp() -> void:
-	_view = Views.GAME
+	_view = Views.PVP
 	if story_progress == 0:
 		Settings.show()
 		story_progress = 1
@@ -107,25 +111,25 @@ func load_game_pvp() -> void:
 
 
 func load_game_pvai() -> void:
-	_view = Views.GAME
+	_view = Views.PVAI
 	get_tree().change_scene("res://src/game/game.tscn")
 	save_session()
 
 
 func load_game_aivai() -> void:
-	_view = Views.GAME
+	_view = Views.AIVAI
 	get_tree().change_scene("res://src/game/game.tscn")
 	save_session()
 
 
 func load_game_aivaip() -> void:
-	_view = Views.GAME
+	_view = Views.AIVAIP
 	get_tree().change_scene("res://src/game/game.tscn")
 	save_session()
 
 
 func load_game_aipvaip() -> void:
-	_view = Views.GAME
+	_view = Views.AIPVAIP
 	get_tree().change_scene("res://src/game/game.tscn")
 	save_session()
 
