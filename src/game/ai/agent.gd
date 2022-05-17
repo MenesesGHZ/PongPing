@@ -12,7 +12,6 @@ var sequence = [
 	null, # reward 2
 	null, # state 2
 	null, # action 2
-	null  # reward 3
 ]
 var actions = [
 	"up",
@@ -29,16 +28,15 @@ func generate_state() -> Array:
 	var state = [
 		generate_position_state(),
 		generate_rotation_state(),
-		player._bullets.size() > 0,
+		int(player._bullets.size() > 0),
 		int(player.shielded),
 		int(player.died),
-		int(player.won)
+		int(player.won),
 	]
 	player.shielded = false
 	player.died = false
 	player.won = false
 	return state
-	
 	
 func pick_random_action() -> String:
 	return actions[randi() % actions.size()]
@@ -60,9 +58,9 @@ func generate_rotation_state() -> String:
 				direction = "-"
 		else:
 			assert(true, "ALV!!!! WHY [%s : %s]" % [current_discrete_rotation, past_discrete_rotation])
-		return direction + past_discrete_rotation  
-	past_discrete_rotation = str(round(current_discrete_rotation))
-	return past_discrete_rotation
+		return direction + str(past_discrete_rotation)  
+	past_discrete_rotation = round(current_discrete_rotation)
+	return str(past_discrete_rotation)
 	
 func generate_position_state() -> String:
 	var current_position = player.position.y - 80  # offset due to player-board boundories
@@ -73,17 +71,27 @@ func generate_position_state() -> String:
 			direction = "+"
 		else:
 			direction = "-"
-		return direction + past_discrete_position
-	past_discrete_position = str(round(current_discrete_position))
-	return past_discrete_position
+		return direction + str(past_discrete_position)
+	past_discrete_position = round(current_discrete_position)
+	return str(past_discrete_position)
 	
+func update_sequence(state: String, action: String):
+	sequence[0] = sequence[3]
+	sequence[1] = sequence[4]
+	sequence[2] = q_learning.compute_reward(state)
+	sequence[3] = state
+	sequence[4] = action
+
 func valid_sequence() -> bool:
 	return null in sequence
 
+func do_action():
+	pass
+
+func init():
+	past_discrete_rotation = round(rad2deg(player.get_rotation()) / 22.5)
+	past_discrete_position = round(player.position.y - 80 / 33.84615)
+
 func _process(delta: float):
-	pass
-
-func _ready():
-	pass
-
+	print(generate_position_state())
 

@@ -13,36 +13,33 @@ var gamma = 0.5
 func _ready():
 	agent_pong.player = get_tree().root.find_node("Pong", true, false)
 	agent_ping.player = get_tree().root.find_node("Ping", true, false)
-
+	agent_pong.init()
+	agent_ping.init()
 
 func Q(agent, state) -> String:
-	var s_t = parse_state(state)
-	var q_sa 
-	var max_q_sa
-	var action
-	var value
+	var s_t = parse_state(state)	
+
 	if not s_t in agent.policy: 
 		agent.policy[s_t] = {}
+	
+	var action
+	if randf() > e or not action in agent.policy[s_t]:
 		action = agent.pick_random_action()
 		agent.policy[s_t][action] = randi() % 10
 	
-	value = argmax_Q_sa(agent, state)
-	max_q_sa = value[0]
-	action = value[1]
-	if randf() > e:
-		action = agent.pick_random_action()
-		
-	q_sa = agent.policy[agent.sequence[0]][agent.sequence[1]]
-	agent.policy[agent.sequence[0]] \
-				[agent.sequence[1]] += \
-				alpha * (agent.sequence[2] + max_q_sa - q_sa)
-				
-	agent.sequence[0] = agent.sequence[3]
-	agent.sequence[1] = agent.sequence[4]
-	agent.sequence[2] = agent.sequence[5]
-	agent.sequence[3] = state
-	agent.sequence[4] = action
-	agent.sequence[5] = ""
+	var value = argmax_Q_sa(agent, state)
+	var max_q_sa = value[0]
+	action = action if action else value[1]
+	
+	var s_0 = agent.sequence[0]
+	var a_0 = agent.sequence[1]
+	
+	agent.update_sequence(state, action)
+	var r_1 = agent.sequence[2]
+	
+	var q_sa = agent.policy[s_0][a_0]
+	agent.policy[s_0][a_0] += alpha * (r_1 + max_q_sa - q_sa)
+
 	return action
 	
 func argmax_Q_sa(agent, state : String) -> Array:
@@ -62,21 +59,21 @@ func parse_state(state: Array) -> String:
 	return ss
 	
 func _process(delta):
-	return
 	var agent_pong_state = generate_state(agent_pong)
 	var agent_ping_state = generate_state(agent_ping)
 	var agent_pong_action = Q(agent_pong, agent_pong_state)
 	var agent_ping_action = Q(agent_ping, agent_ping_state)
-	
+	agent_pong.do_action(agent_pong_action)
+	agent_ping.do_action(agent_ping_action)
 	
 func compute_reward(state: Array):
-	if(state[6]):
+	if(state[5]): # if won
 		return 10
-	if(state[5]):
+	if(state[4]): # if died
 		return -10
-	if(state[4]):
+	if(state[3]): # if shielded
 		return 1
-	return -0.5 
+	return -0.5   # if is lazy
 
 func generate_state(agent):
 	var state = []
