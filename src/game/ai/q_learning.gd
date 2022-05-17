@@ -42,7 +42,7 @@ func Q(agent, state) -> String:
 	agent.sequence[2] = agent.sequence[5]
 	agent.sequence[3] = state
 	agent.sequence[4] = action
-	agent.sequence[5] = compute_reward(state)
+	agent.sequence[5] = ""
 	return action
 	
 func argmax_Q_sa(agent, state : String) -> Array:
@@ -61,14 +61,14 @@ func parse_state(state: Array) -> String:
 		ss += str(s)
 	return ss
 	
-	
 func _process(delta):
+	return
 	var agent_pong_state = generate_state(agent_pong)
 	var agent_ping_state = generate_state(agent_ping)
 	var agent_pong_action = Q(agent_pong, agent_pong_state)
 	var agent_ping_action = Q(agent_ping, agent_ping_state)
-
-
+	
+	
 func compute_reward(state: Array):
 	if(state[6]):
 		return 10
