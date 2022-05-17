@@ -16,8 +16,8 @@ var sequence = [
 var actions = [
 	"up",
 	"down",
-	"rotate_positive",
-	"rotate_negative",
+	"rotate_right",
+	"rotate_left",
 	"shoot"
 ]
 
@@ -28,7 +28,7 @@ func generate_state() -> Array:
 	var state = [
 		generate_position_state(),
 		generate_rotation_state(),
-		int(player._bullets.size() > 0),
+		int(player.can_shoot()),
 		int(player.shielded),
 		int(player.died),
 		int(player.won),
@@ -86,12 +86,14 @@ func valid_sequence() -> bool:
 	return sequence[0] != null and sequence[1] != null
 
 func do_action(action: String):
-	print("DO! -> %s" % action)
+	player.controller(
+		action == actions[0],
+		action == actions[1],
+		action == actions[2],
+		action == actions[3],
+		action == actions[4]
+	)
 
 func init():
 	past_discrete_rotation = round(rad2deg(player.get_rotation()) / 22.5)
 	past_discrete_position = round(player.position.y - 80 / 33.84615)
-
-func _process(delta: float):
-	print(generate_position_state())
-
