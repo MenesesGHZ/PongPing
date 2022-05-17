@@ -75,18 +75,18 @@ func generate_position_state() -> String:
 	past_discrete_position = round(current_discrete_position)
 	return str(past_discrete_position)
 	
-func update_sequence(state: String, action: String):
+func update_sequence(state: Array, action: String):
 	sequence[0] = sequence[3]
 	sequence[1] = sequence[4]
 	sequence[2] = q_learning.compute_reward(state)
-	sequence[3] = state
+	sequence[3] = q_learning.parse_state(state)
 	sequence[4] = action
 
 func valid_sequence() -> bool:
-	return null in sequence
+	return sequence[0] != null and sequence[1] != null
 
-func do_action():
-	pass
+func do_action(action: String):
+	print("DO! -> %s" % action)
 
 func init():
 	past_discrete_rotation = round(rad2deg(player.get_rotation()) / 22.5)

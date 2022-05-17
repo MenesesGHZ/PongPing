@@ -27,7 +27,7 @@ func Q(agent, state) -> String:
 		action = agent.pick_random_action()
 		agent.policy[s_t][action] = randi() % 10
 	
-	var value = argmax_Q_sa(agent, state)
+	var value = argmax_Q_sa(agent, s_t)
 	var max_q_sa = value[0]
 	action = action if action else value[1]
 	
@@ -37,8 +37,9 @@ func Q(agent, state) -> String:
 	agent.update_sequence(state, action)
 	var r_1 = agent.sequence[2]
 	
-	var q_sa = agent.policy[s_0][a_0]
-	agent.policy[s_0][a_0] += alpha * (r_1 + max_q_sa - q_sa)
+	if s_0 != null and a_0 != null:
+		var q_sa = agent.policy[s_0][a_0]
+		agent.policy[s_0][a_0] += alpha * (r_1 + max_q_sa - q_sa)
 
 	return action
 	
