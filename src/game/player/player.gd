@@ -43,7 +43,7 @@ export var move_speed := 500.0
 
 export var rotation_speed := 10
 
-export(int, 0, 100) var bullets := 3
+var bullets := 1
 
 
 

@@ -25,7 +25,7 @@ func Q(agent, state) -> String:
 	var action
 	var action_in_policy = action in agent.policy[s_t]
 	if randf() > e or not action_in_policy:
-		action = agent.pick_random_action()
+		action = agent.pick_random_action(state)
 		if not action_in_policy:
 			agent.policy[s_t][action] = randi() % 10
 	
@@ -66,8 +66,8 @@ func _process(delta):
 	var agent_ping_state = generate_state(agent_ping)
 	var agent_pong_action = Q(agent_pong, agent_pong_state)
 	var agent_ping_action = Q(agent_ping, agent_ping_state)
-	agent_pong.do_action(agent_pong_action)
-	agent_ping.do_action(agent_ping_action)
+	agent_pong.do_action(agent_pong_action, agent_pong_state)
+	agent_ping.do_action(agent_ping_action, agent_ping_state)
 	
 func compute_reward(state: Array):
 	if(state[5]): # if won
