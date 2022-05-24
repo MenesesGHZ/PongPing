@@ -52,31 +52,26 @@ func pick_random_action(state: Array) -> String:
 	return valid_actions[randi() % valid_actions.size()]
 	
 func generate_rotation_state() -> String:
-	var current_rotation = rad2deg(player.get_rotation())
+	"""
+	Generates a state base on player.rotation_degrees.
+	Where rotation_degrees is a value between [-180, 180] -> [0, 360].
+	"""
+	var current_rotation = fmod(player.rotation_degrees + 180, 360)
 	var current_discrete_rotation = current_rotation / 45
-	if abs(current_discrete_rotation) > 0.05:
+	var diff = abs(current_discrete_rotation - past_discrete_rotation)
+	if 0.05 < diff and diff < 0.95:
 		var direction
-		if 0 <= current_discrete_rotation and current_discrete_rotation <= 8:
-			if past_discrete_rotation < current_discrete_rotation:
-				direction = "+"
-			else:
-				direction = "-"
-		elif 0 >= current_discrete_rotation and current_discrete_rotation >= -8:
-			if past_discrete_rotation > current_discrete_rotation:
-				direction = "+"
-			else:
-				direction = "-"
+		if current_discrete_rotation > past_discrete_rotation:
+			direction = "+"
 		else:
-			assert(true, "ALV!!!! WHY [%s : %s]" % [current_discrete_rotation, past_discrete_rotation])
-		
-		return direction + str(past_discrete_rotation)  
-
+			direction = "-"
+		return direction + str(abs(past_discrete_rotation))  
 	past_discrete_rotation = round(current_discrete_rotation)
 	return str(past_discrete_rotation)
 	
 func generate_position_state() -> String:
 	"""
-	Generate a state base on player.position.y.
+	Generates a state base on player.position.y.
 	Where position.y is a value between [80, 520] -> [0, 440]
 	"""
 	var current_position = player.position.y - 80  # offset due to player-board boundories
@@ -89,7 +84,7 @@ func generate_position_state() -> String:
 		else:
 			direction = "-"
 		return direction + str(past_discrete_position)
-	past_discrete_position = round(current_discrete_position)
+	past_discrete_position = abs(round(current_discrete_position))
 	return str(past_discrete_position)
 	
 func update_sequence(state: Array, action: String):
@@ -104,13 +99,13 @@ func valid_sequence() -> bool:
 
 func do_action(action: String, state: Array):
 	player.controller(
-		(action == actions[0] || state[0][0] == "-"),
-		(action == actions[1] || state[0][0] == "+"),
+		false, #(action == actions[0] || state[0][0] == "-"),
+		false, #(action == actions[1] || state[0][0] == "+"),
 		false, #(action == actions[2] || state[1][0] == "+"),
 		false, #(action == actions[3] || state[1][0] == "-"),
-		action == actions[4]
+		false #action == actions[4]
 	)
 
 func init():
-	past_discrete_rotation = round(rad2deg(player.get_rotation()) / 45)
+	past_discrete_rotation = round(fmod(player.rotation_degrees + 180, 360) / 45)
 	past_discrete_position = round((player.position.y - 80) / 88)
