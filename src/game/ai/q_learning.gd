@@ -68,7 +68,7 @@ func _process(delta):
 	if (not (agent_pong_state[4] or agent_ping_state[4]) and 
 		(agent_ping.player.is_dying() or agent_pong.player.is_dying())):
 		return
-
+	
 	var agent_pong_action = Q(agent_pong, agent_pong_state)
 	var agent_ping_action = Q(agent_ping, agent_ping_state)
 	
