@@ -48,11 +48,11 @@ var bullets := 1
 
 
 ## Public Variables
-var died := false
+var ai_flag_died := false
 
-var won := false
+var ai_flag_won := false
 
-var shielded := false
+var ai_flag_shielded := false
 
 
 
@@ -61,6 +61,7 @@ var _player_state : int = PlayerStates.IDLE setget _set_player_state
 
 var _bullets := []
 
+var _player_type
 
 
 ## OnReady Variables
@@ -74,6 +75,7 @@ onready var bullet_spawn : Position2D = get_node("BulletSpawn")
 func _ready() -> void:
 	if Engine.editor_hint:
 		return
+	_player_type = "pong" if player_type == PlayerTypes.PONG else "ping"
 	
 	for i in range(bullets):
 		var bullet = Bullet.instance()
@@ -88,22 +90,6 @@ func _process(delta : float) -> void:
 	var direction := Vector2.ZERO
 	
 	if ai_type == AiTypes.NONE:
-		var _player_type := "pong" if player_type == PlayerTypes.PONG else "ping"
-		
-		if Input.is_action_pressed(_player_type + "_up"):
-			direction += Vector2.UP
-		if Input.is_action_pressed(_player_type + "_down"):
-			direction += Vector2.DOWN
-		
-		if Input.is_action_pressed(_player_type + "_right"):
-			rotate(deg2rad(rotation_speed))
-		if Input.is_action_pressed(_player_type + "_left"):
-			rotate(deg2rad(-rotation_speed))
-		
-		if Input.is_action_just_released(_player_type + "_shoot"):
-			shoot()
-	elif ai_type == AiTypes.QLEARNING:
-		var _player_type := "pong" if player_type == PlayerTypes.PONG else "ping"
 		controller(
 			Input.is_action_pressed(_player_type + "_up"),
 			Input.is_action_pressed(_player_type + "_down"),
@@ -111,8 +97,9 @@ func _process(delta : float) -> void:
 			Input.is_action_pressed(_player_type + "_left"),
 			Input.is_action_just_released(_player_type + "_shoot")
 		)
+	elif ai_type == AiTypes.QLEARNING:
+		pass
 	elif ai_type == AiTypes.QLEARNING_PLUS:
-		# TODO Add Q-learning+ logic
 		pass
 	
 	if player_type == PlayerTypes.PONG:
@@ -149,6 +136,8 @@ func set_player_type(new_value : int) -> void:
 func can_shoot() -> bool:
 	return _bullets.size() > 0
 
+func is_dying() -> bool:
+	return _player_state == PlayerStates.DYING
 
 func shoot() -> void:
 	if not can_shoot():
@@ -165,11 +154,11 @@ func shoot() -> void:
 
 
 func hit() -> void:
-	if _player_state == PlayerStates.DYING:
+	if is_dying():
 		return
 	_set_player_state(PlayerStates.DYING)
 	emit_signal("died", self)
-	died = true
+	ai_flag_died = true
 
 
 ## Private Methods

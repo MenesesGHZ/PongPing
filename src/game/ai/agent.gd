@@ -30,14 +30,16 @@ func generate_state() -> Array:
 		generate_position_state(),
 		generate_rotation_state(),
 		int(player.can_shoot()),
-		int(player.shielded),
-		int(player.died),
-		int(player.won),
+		int(player.ai_flag_shielded),
+		int(player.ai_flag_died),
+		int(player.ai_flag_won),
 	]
-	player.shielded = false
-	player.died = false
-	player.won = false
 	return state
+	
+func reset_ai_flags() -> void:
+	player.ai_flag_shielded = false
+	player.ai_flag_died = false
+	player.ai_flag_won = false
 	
 func pick_random_action(state: Array) -> String:
 	var valid_actions = ["none"] 
@@ -99,11 +101,11 @@ func valid_sequence() -> bool:
 
 func do_action(action: String, state: Array):
 	player.controller(
-		false, #(action == actions[0] || state[0][0] == "-"),
-		false, #(action == actions[1] || state[0][0] == "+"),
-		false, #(action == actions[2] || state[1][0] == "+"),
-		false, #(action == actions[3] || state[1][0] == "-"),
-		false #action == actions[4]
+		(action == actions[0] || state[0][0] == "-"),
+		(action == actions[1] || state[0][0] == "+"),
+		(action == actions[2] || state[1][0] == "+"),
+		(action == actions[3] || state[1][0] == "-"),
+		action == actions[4]
 	)
 
 func init():

@@ -27,8 +27,6 @@ const VERSION = "0.0.0"
 
 const DEBUGGING = true
 
-
-
 ## Public Variables
 var story_progress : int = StoryProgress.NEW_GAME
 
@@ -39,6 +37,7 @@ var _new_session : Dictionary
 
 var _view : int = Views.MAIN_MENU
 
+var _q_learning : QLearning
 
 
 ## Built-In Virtual Methods
@@ -96,6 +95,7 @@ func get_currect_view() -> int:
 
 func load_main_menu() -> void:
 	_view = Views.MAIN_MENU
+	get_parent().remove_child(_q_learning)
 	get_tree().change_scene("res://src/main_menu/main_menu.tscn")
 	save_session()
 

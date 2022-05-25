@@ -36,9 +36,12 @@ func _on_body_entered(body : Node):
 	var core_hitted = body.has_node("CollisionShape2D")
 	if core_hitted and body.is_in_group("Players"):
 		body.hit()
-		player_owner.won = true
+		if body != player_owner:
+			player_owner.ai_flag_won = true
+		else:
+			player_owner.ai_flag_died = true
 	if body.is_in_group("Shields"): 
-		body.get_parent().shielded = true
+		body.get_parent().ai_flag_shielded = true
 	
 
 func _on_body_exited(body : Node):

@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/game/player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://default_env.tres" type="Environment" id=2]
 [ext_resource path="res://src/game/game.gd" type="Script" id=3]
-[ext_resource path="res://src/game/ai/q_learning.tscn" type="PackedScene" id=6]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 512, 16 )
@@ -46,4 +45,4 @@ player_type = 1
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource( 2 )
 
-[node name="QLearning" parent="." instance=ExtResource( 6 )]
+[connection signal="tree_exiting" from="." to="." method="_on_Game_tree_exiting"]

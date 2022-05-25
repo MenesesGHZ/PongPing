@@ -64,19 +64,28 @@ func parse_state(state: Array) -> String:
 func _process(delta):
 	var agent_pong_state = generate_state(agent_pong)
 	var agent_ping_state = generate_state(agent_ping)
+	
+	if (not (agent_pong_state[4] or agent_ping_state[4]) and 
+		(agent_ping.player.is_dying() or agent_pong.player.is_dying())):
+		return
+
 	var agent_pong_action = Q(agent_pong, agent_pong_state)
 	var agent_ping_action = Q(agent_ping, agent_ping_state)
+	
+	agent_pong.reset_ai_flags()
+	agent_ping.reset_ai_flags()
+	
 	agent_pong.do_action(agent_pong_action, agent_pong_state)
 	agent_ping.do_action(agent_ping_action, agent_ping_state)
 	
 func compute_reward(state: Array):
-	if(state[5]): # if won
+	if state[5]: # if won
 		return 10
-	if(state[4]): # if died
+	if state[4]: # if died
 		return -10
-	if(state[3]): # if shielded
+	if state[3]: # if shielded
 		return 1
-	return -0.5   # if is lazy
+	return -0.5   # if lazy
 
 func generate_state(agent):
 	var state = []
