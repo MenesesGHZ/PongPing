@@ -110,13 +110,21 @@ func do_action(action: String, state: Array):
 		(action == actions[3] || state[1][0] == "-"),
 		action == actions[4]
 	)
-	#player.controller(false,false,false,false,false)
 
 func did_change(state: Array) -> bool:
 	if state == past_state:
 		return false
 	past_state = state
 	return true
+
+func save_brain():
+	var file = File.new()
+	file.open("res://src/game/ai/brain/" + get_name() + ".json", File.WRITE)
+	file.store_string(JSON.print(policy))
+	file.close()
+	
+func load_brain():
+	pass
 
 func init():
 	past_discrete_rotation = round(fmod(player.rotation_degrees + 180, 360) / 45)

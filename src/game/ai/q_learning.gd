@@ -10,6 +10,14 @@ var e = 0.1
 var alpha = 0.2
 var gamma = 0.5
 
+var metadata = [
+	1, # counter_iteration
+	0, # counter_matches,
+	6144 * 512, # agent state * enviroment state
+]
+var counter_iteration = 1
+var counter_matches = 0
+
 func _ready():
 	agent_pong.player = get_tree().root.find_node("Pong", true, false)
 	agent_ping.player = get_tree().root.find_node("Ping", true, false)
@@ -82,6 +90,8 @@ func _process(delta):
 	agent_pong.do_action(agent_pong_action, agent_pong_state)
 	agent_ping.do_action(agent_ping_action, agent_ping_state)
 	
+	update_metadata(agent_pong_state, agent_ping_state)
+	
 func compute_reward(state: Array):
 	if state[5]: # if won
 		return 10
@@ -96,3 +106,10 @@ func generate_state(agent):
 	state.append_array(agent.generate_state())
 	state.append_array(environment.generate_state(agent))
 	return state
+	
+func update_metadata(state_1: Array, state_2: Array):
+	counter_iteration += 1
+	if state_1[4] or state_2[4]:
+		counter_matches += 1
+		agent_pong.save_brain()
+		agent_ping.save_brain()
