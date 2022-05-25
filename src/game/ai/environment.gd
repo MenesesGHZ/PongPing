@@ -13,6 +13,8 @@ func generate_state(agent) -> Array:
 	Position.x is a value between [0, 1024] -> [16, 1008] -> [0, 992]
 	Position.y is a value between [0, 600] -> [16, 584] -> [0, 568]
 	danger_direction -> [0, 1]
+	N-Bullets = 2
+	Number of posible combinations = (16*8*2) * N-Bullets = 512
 	"""
 	var state = []
 	var bullets = get_tree().get_nodes_in_group("Bullets")

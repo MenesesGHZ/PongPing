@@ -24,17 +24,18 @@ var actions = [
 
 var past_discrete_rotation
 var past_discrete_position
+var past_state # agent.generate_state + environment.generate_state
 
 func generate_state() -> Array:
 	var state = [
-		generate_position_state(),
-		generate_rotation_state(),
-		int(player.can_shoot()),
-		int(player.ai_flag_shielded),
-		int(player.ai_flag_died),
-		int(player.ai_flag_won),
+		generate_position_state(),    # 24 combinations
+		generate_rotation_state(),    # 16 combinations 
+		int(player.can_shoot()),	  # 2 combinations
+		int(player.ai_flag_shielded), # 2 combinations
+		int(player.ai_flag_died),	  # 2 combinations
+		int(player.ai_flag_won),	  # 2 combinations
 	]
-	return state
+	return state # 6,144 combinations 
 	
 func reset_ai_flags() -> void:
 	player.ai_flag_shielded = false
@@ -57,6 +58,7 @@ func generate_rotation_state() -> String:
 	"""
 	Generates a state base on player.rotation_degrees.
 	Where rotation_degrees is a value between [-180, 180] -> [0, 360].
+	Number of posible combinations = 8 + 8*2 = 24
 	"""
 	var current_rotation = fmod(player.rotation_degrees + 180, 360)
 	var current_discrete_rotation = current_rotation / 45
@@ -75,6 +77,7 @@ func generate_position_state() -> String:
 	"""
 	Generates a state base on player.position.y.
 	Where position.y is a value between [80, 520] -> [0, 440]
+	Number of posible combinations = 2*2 + 4*3 = 16
 	"""
 	var current_position = player.position.y - 80  # offset due to player-board boundories
 	var current_discrete_position = current_position / 88
@@ -107,6 +110,13 @@ func do_action(action: String, state: Array):
 		(action == actions[3] || state[1][0] == "-"),
 		action == actions[4]
 	)
+	#player.controller(false,false,false,false,false)
+
+func did_change(state: Array) -> bool:
+	if state == past_state:
+		return false
+	past_state = state
+	return true
 
 func init():
 	past_discrete_rotation = round(fmod(player.rotation_degrees + 180, 360) / 45)
