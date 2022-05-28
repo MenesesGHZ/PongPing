@@ -117,14 +117,25 @@ func did_change(state: Array) -> bool:
 	past_state = state
 	return true
 
-func save_brain():
+func save_brain(global_metadata, agent_metadata):
 	var file = File.new()
-	file.open("res://src/game/ai/brain/" + get_name() + ".json", File.WRITE)
-	file.store_string(JSON.print(policy))
+	var brain = {
+		"policy": policy,
+		"global_metadata": global_metadata,
+		"agent_metadata": agent_metadata,
+	}
+	file.open("res://src/game/ai/brain/" + get_name() + "_" + str(global_metadata["matches_counter"]) + ".json", File.WRITE)
+	file.store_string(JSON.print(brain))
 	file.close()
 	
 func load_brain():
-	pass
+	var file = File.new()
+	file.open("res://src/game/ai/brain/" + get_name() + "_5.json", File.READ)
+	var text = file.get_as_text()
+	file.close()
+	var brain = JSON.parse(text)
+	policy = brain["policy"]
+	return [brain["global_metadata"], brain["agent_metadata"]]
 
 func init():
 	past_discrete_rotation = round(fmod(player.rotation_degrees + 180, 360) / 45)

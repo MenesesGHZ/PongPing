@@ -10,13 +10,27 @@ var e = 0.1
 var alpha = 0.2
 var gamma = 0.5
 
-var metadata = [
-	1, # counter_iteration
-	0, # counter_matches,
-	6144 * 512, # agent state * enviroment state
-]
-var counter_iteration = 1
-var counter_matches = 0
+var metadata = {
+	"global": {
+		"iteration_counter": 0,
+		"matches_counter": 0,
+		"total_number_of_states": 6144 * 12800,
+	},
+	"pong": {
+		"iteration_counter_without_die": 0,
+		"win_without_lose_counter": 0,
+		"win_counter": 0,
+		"lose_counter": 0,
+	},
+	"ping": {
+		"iteration_counter_without_die": 0,
+		"win_without_lose_counter": 0,
+		"win_counter": 0,
+		"lose_counter": 0,
+	}
+}
+
+var stuck_counter = 0 # ERROR VAR
 
 func _ready():
 	agent_pong.player = get_tree().root.find_node("Pong", true, false)
@@ -78,8 +92,11 @@ func _process(delta):
 		return
 	
 	if (not agent_pong.did_change(agent_pong_state) and 
-		not agent_ping.did_change(agent_ping_state)):
+		not agent_ping.did_change(agent_ping_state)) and stuck_counter <= 5:
+		stuck_counter += 1
 		return
+
+	stuck_counter = 0
 
 	var agent_pong_action = Q(agent_pong, agent_pong_state)
 	var agent_ping_action = Q(agent_ping, agent_ping_state)
@@ -108,8 +125,24 @@ func generate_state(agent):
 	return state
 	
 func update_metadata(state_1: Array, state_2: Array):
-	counter_iteration += 1
-	if state_1[4] or state_2[4]:
-		counter_matches += 1
-		agent_pong.save_brain()
-		agent_ping.save_brain()
+	metadata["global"]["iteration_counter"] += 1
+	metadata["pong"]["iteration_counter_without_die"] += 1
+	metadata["ping"]["iteration_counter_without_die"] += 1
+	if state_1[4]:
+		metadata["pong"]["lose_counter"] += 1
+		metadata["ping"]["win_counter"] += 1
+		metadata["ping"]["win_without_lose_counter"] += 1
+		metadata["global"]["matches_counter"] += 1
+		agent_pong.save_brain(metadata["global"], metadata["pong"])
+		metadata["pong"]["iteration_counter_without_die"] = 0
+		metadata["pong"]["win_without_lose_counter"] = 0
+	if state_2[4]:
+		metadata["ping"]["lose_counter"] += 1
+		metadata["pong"]["win_counter"] += 1
+		metadata["pong"]["win_without_lose_counter"] += 1
+		metadata["global"]["matches_counter"] += 1
+		agent_ping.save_brain(metadata["global"], metadata["ping"])
+		metadata["ping"]["iteration_counter_without_die"] = 0
+		metadata["ping"]["win_without_lose_counter"] = 0
+
+
