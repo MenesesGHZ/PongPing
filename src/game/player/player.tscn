@@ -243,3 +243,18 @@ texture = ExtResource( 3 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
 polygon = PoolVector2Array( -21, -50, -43, -50, -57, -43, -64, -21, -64, 21, -57, 43, -43, 50, -21, 50, -43, 21, -43, -21, -21, -43 )
+
+[node name="RayCast2D_1" type="RayCast2D" parent="."]
+position = Vector2( 60, 0 )
+rotation = 4.71239
+enabled = true
+cast_to = Vector2( 0, 800 )
+collision_mask = 2
+
+[node name="RayCast2D_2" type="RayCast2D" parent="."]
+visible = false
+position = Vector2( 60, 0 )
+rotation = 4.71239
+enabled = true
+cast_to = Vector2( 0, 800 )
+collision_mask = 2

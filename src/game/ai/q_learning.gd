@@ -6,8 +6,8 @@ onready var agent_pong := get_node("AgentPong")
 onready var agent_ping := get_node("AgentPing")
 onready var environment := get_node("Environment")
 
-var e = 0.1
-var alpha = 0.2
+var e = 0.25
+var alpha = 0.1
 var gamma = 0.5
 
 var metadata = {
@@ -66,7 +66,7 @@ func Q(agent, state) -> String:
 	
 	if s_0 != null and a_0 != null:
 		var q_sa = agent.policy[s_0][a_0]
-		agent.policy[s_0][a_0] += alpha * (r_1 + max_q_sa - q_sa)
+		agent.policy[s_0][a_0] += alpha * (r_1 + gamma * max_q_sa - q_sa)
 
 	return action
 	
@@ -122,10 +122,14 @@ func compute_reward(state: Array):
 	return -0.5  # if lazy
 
 func generate_state(agent):
+	"""
+	Total number of combinations = agent states combs * environment states combs
+	T = 6,144 * 4,096 = 25,165,824
+	"""
 	var state = []
 	state.append_array(agent.generate_state())
 	state.append_array(environment.generate_state(agent))
-	return state
+	return state 
 	
 func update_metadata(state_1: Array, state_2: Array):
 	metadata["global"]["iteration_counter"] += 1

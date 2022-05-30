@@ -16,12 +16,15 @@ func generate_state(agent) -> Array:
 	enemie position y -> 24 
 	N-Bullets = 2
 	N-Enemies = 1
-	Number of posible combinations = ((16*8*2) * N-Bullets) * (24 * N-Enemies)  = 12,800
+	Number of posible combinations = ((16*8*2) * N-Bullets) * (8 * N-Enemies)  = 4,096
 	"""
 	var state = []
 	for player in get_tree().get_nodes_in_group("Players"):
 		if player != agent.player:
-			state.append(agent.generate_position_state())
+			var position_state = agent.generate_position_state()
+			if "-" in position_state or "+" in position_state:
+				position_state.erase(0, 1)
+			state.append(position_state)
 	for bullet in get_tree().get_nodes_in_group("Bullets"):
 		var danger_direction = 0
 		if (bullet.linear_velocity.x > 0 and bullet.position.x <= agent.player.position.x):
