@@ -128,15 +128,16 @@ func save_brain(global_metadata, agent_metadata):
 	file.store_string(JSON.print(brain))
 	file.close()
 	
-func load_brain():
+func load_brain(epoch: int):
 	var file = File.new()
-	file.open("res://src/game/ai/brain/" + get_name() + "_5.json", File.READ)
+	file.open("res://src/game/ai/brain/" + get_name() + "_" + str(epoch) + ".json", File.READ)
 	var text = file.get_as_text()
 	file.close()
-	var brain = JSON.parse(text)
+	var brain = JSON.parse(text).result
 	policy = brain["policy"]
 	return [brain["global_metadata"], brain["agent_metadata"]]
 
-func init():
+func init(epoch: int):
 	past_discrete_rotation = round(fmod(player.rotation_degrees + 180, 360) / 45)
 	past_discrete_position = round((player.position.y - 80) / 88)
+	return load_brain(epoch)

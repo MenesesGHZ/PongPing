@@ -35,8 +35,11 @@ var stuck_counter = 0 # ERROR VAR
 func _ready():
 	agent_pong.player = get_tree().root.find_node("Pong", true, false)
 	agent_ping.player = get_tree().root.find_node("Ping", true, false)
-	agent_pong.init()
-	agent_ping.init()
+	var metadata_pong = agent_pong.init(661)
+	var metadata_ping = agent_ping.init(662)
+	metadata["global"] = metadata_pong[0]
+	metadata["pong"] = metadata_pong[1]
+	metadata["ping"] = metadata_ping[1]
 
 func Q(agent, state) -> String:
 	var s_t = parse_state(state)	
