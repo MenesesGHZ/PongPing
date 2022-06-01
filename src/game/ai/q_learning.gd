@@ -6,7 +6,7 @@ onready var agent_pong := get_node("AgentPong")
 onready var agent_ping := get_node("AgentPing")
 onready var environment := get_node("Environment")
 
-var e = 0.25
+var e = 0.025 # Explorative -> 0.25;  Greedy -> 0.025
 var alpha = 0.1
 var gamma = 0.5
 
@@ -39,11 +39,11 @@ var stuck_counter = 0 # ERROR VAR
 func _ready():
 	agent_pong.player = get_tree().root.find_node("Pong", true, false)
 	agent_ping.player = get_tree().root.find_node("Ping", true, false)
-	var metadata_pong = agent_pong.init(0)
-	var metadata_ping = agent_ping.init(0)
-	#metadata["global"] = metadata_pong[0]
-	#metadata["pong"] = metadata_pong[1]
-	#metadata["ping"] = metadata_ping[1]
+	var metadata_pong = agent_pong.init(1226)
+	var metadata_ping = agent_ping.init(1134)
+	metadata["global"] = metadata_pong[0]
+	metadata["pong"] = metadata_pong[1]
+	metadata["ping"] = metadata_ping[1]
 
 func Q(agent, state) -> String:
 	var s_t = parse_state(state)	
@@ -116,12 +116,14 @@ func _process(delta):
 	agent_pong.reset_ai_flags()
 	agent_ping.reset_ai_flags()
 	
-func compute_reward(state: Array):
+func compute_reward(agent, state: Array):
 	if state[5]: # if won
 		return 10
 	if state[4]: # if died
 		return -10
 	if state[3]: # if shielded
+		return 3
+	if agent.player.ai_flag_hit:
 		return 3
 	return -0.5  # if lazy
 

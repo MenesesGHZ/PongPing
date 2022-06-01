@@ -97,7 +97,7 @@ func generate_position_state() -> String:
 func update_sequence(state: Array, action: String):
 	sequence[0] = sequence[3]
 	sequence[1] = sequence[4]
-	sequence[2] = q_learning.compute_reward(state)
+	sequence[2] = q_learning.compute_reward(self, state)
 	sequence[3] = q_learning.parse_state(state)
 	sequence[4] = action
 
@@ -139,7 +139,7 @@ func load_brain(epoch: int):
 	policy = brain["policy"]
 	return [brain["global_metadata"], brain["agent_metadata"]]
 
-func init(_epoch: int):
+func init(epoch: int):
 	past_discrete_rotation = round(fmod(player.rotation_degrees + 180, 360) / 45)
 	past_discrete_position = round((player.position.y - 80) / 88)
-	#return load_brain(epoch)
+	return load_brain(epoch)
