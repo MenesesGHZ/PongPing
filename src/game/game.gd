@@ -33,17 +33,13 @@ func _ready() -> void:
 			setup_PVAI()
 			_pong.ai_type = _pong.AiTypes.NONE
 			_ping.ai_type = _ping.AiTypes.QLEARNING
-		Session.Views.AIVAI:
-			setup_AIVAI()
+		Session.Views.AIVP:
+			setup_AIVP()
 			_pong.ai_type = _pong.AiTypes.QLEARNING
 			_ping.ai_type = _ping.AiTypes.QLEARNING
 		Session.Views.AIVAIP:
-			setup_AIVAIP()
+			setup_AIVAI()
 			_pong.ai_type = _pong.AiTypes.QLEARNING
-			_ping.ai_type = _ping.AiTypes.QLEARNING_PLUS
-		Session.Views.AIPVAIP:
-			setup_AIPVAIP()
-			_pong.ai_type = _pong.AiTypes.QLEARNING_PLUS
 			_ping.ai_type = _ping.AiTypes.QLEARNING_PLUS
 
 
@@ -70,19 +66,20 @@ func setup_PVP() -> void:
 	pass
 
 func setup_PVAI() -> void:
-	pass
+	_q_learning = QLearning.instance()
+	get_parent().add_child(_q_learning)
+	_q_learning.ping_bot_running = true
+	
+func setup_AIVP() -> void:
+	_q_learning = QLearning.instance()
+	get_parent().add_child(_q_learning)
+	_q_learning.pong_bot_running = true
 	
 func setup_AIVAI() -> void:
 	_q_learning = QLearning.instance()
 	get_parent().add_child(_q_learning)
-
-func setup_AIVAIP() -> void:
-	_q_learning = QLearning.instance()
-	get_parent().add_child(_q_learning)
-	
-func setup_AIPVAIP() -> void:
-	_q_learning = QLearning.instance()
-	get_parent().add_child(_q_learning)
+	_q_learning.pong_bot_running = true
+	_q_learning.ping_bot_running = true
 
 
 func _on_Game_tree_exiting():

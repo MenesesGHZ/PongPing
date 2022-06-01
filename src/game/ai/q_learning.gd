@@ -6,8 +6,11 @@ onready var agent_pong := get_node("AgentPong")
 onready var agent_ping := get_node("AgentPing")
 onready var environment := get_node("Environment")
 
+var pong_bot_running = false
+var ping_bot_running = false
+
 var e = 0.025 # Explorative -> 0.25;  Greedy -> 0.025
-var alpha = 0.1
+var alpha = 0.15
 var gamma = 0.5
 
 var metadata = {
@@ -38,11 +41,13 @@ var stuck_counter = 0 # ERROR VAR
 
 func _ready():
 	agent_pong.player = get_tree().root.find_node("Pong", true, false)
-	agent_ping.player = get_tree().root.find_node("Ping", true, false)
-	var metadata_pong = agent_pong.init(1226)
-	var metadata_ping = agent_ping.init(1134)
+	var metadata_pong = agent_pong.init(1321)
 	metadata["global"] = metadata_pong[0]
 	metadata["pong"] = metadata_pong[1]
+	
+	agent_ping.player = get_tree().root.find_node("Ping", true, false)
+	var metadata_ping = agent_ping.init(1222)
+	metadata["global"] = metadata_ping[0]
 	metadata["ping"] = metadata_ping[1]
 
 func Q(agent, state) -> String:
@@ -99,19 +104,21 @@ func _process(delta):
 		return
 	
 	if (not agent_pong.did_change(agent_pong_state) and 
-		not agent_ping.did_change(agent_ping_state)) and stuck_counter <= 5:
+		not agent_ping.did_change(agent_ping_state)) and stuck_counter <= 2:
 		stuck_counter += 1
 		return
 
 	stuck_counter = 0
-
-	var agent_pong_action = Q(agent_pong, agent_pong_state)
-	var agent_ping_action = Q(agent_ping, agent_ping_state)
 	
-	agent_pong.do_action(agent_pong_action, agent_pong_state)
-	agent_ping.do_action(agent_ping_action, agent_ping_state)
+	if pong_bot_running:
+		var agent_pong_action = Q(agent_pong, agent_pong_state)
+		agent_pong.do_action(agent_pong_action, agent_pong_state)
 	
-	update_metadata(agent_pong_state, agent_ping_state)
+	if ping_bot_running:
+		var agent_ping_action = Q(agent_ping, agent_ping_state)
+		agent_ping.do_action(agent_ping_action, agent_ping_state)
+	
+	#update_metadata(agent_pong_state, agent_ping_state)
 	
 	agent_pong.reset_ai_flags()
 	agent_ping.reset_ai_flags()
@@ -125,7 +132,7 @@ func compute_reward(agent, state: Array):
 		return 3
 	if agent.player.ai_flag_hit:
 		return 3
-	return -0.5  # if lazy
+	return -2  # if lazy
 
 func generate_state(agent):
 	"""
@@ -145,7 +152,7 @@ func update_metadata(state_1: Array, state_2: Array):
 	metadata["ping"]["shielded_counter_without_die"] += int(agent_ping.player.ai_flag_shielded)
 	metadata["pong"]["hit_counter_without_die"] += int(agent_pong.player.ai_flag_hit)
 	metadata["ping"]["hit_counter_without_die"] += int(agent_ping.player.ai_flag_hit)
-	if state_1[4]:
+	if state_1[4] and pong_bot_running:
 		metadata["pong"]["lose_counter"] += 1
 		metadata["ping"]["win_counter"] += 1
 		metadata["ping"]["win_counter_without_die"] += 1
@@ -155,7 +162,7 @@ func update_metadata(state_1: Array, state_2: Array):
 		metadata["pong"]["win_counter_without_die"] = 0
 		metadata["pong"]["shielded_counter_without_die"] = 0
 		metadata["pong"]["hit_counter_without_die"] = 0
-	if state_2[4]:
+	if state_2[4] and ping_bot_running:
 		metadata["ping"]["lose_counter"] += 1
 		metadata["pong"]["win_counter"] += 1
 		metadata["pong"]["win_counter_without_die"] += 1

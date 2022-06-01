@@ -132,6 +132,7 @@ func save_brain(global_metadata, agent_metadata):
 	
 func load_brain(epoch: int):
 	var file = File.new()
+	print("res://src/game/ai/brain/" + get_name() + "_" + str(epoch) + ".json")
 	file.open("res://src/game/ai/brain/" + get_name() + "_" + str(epoch) + ".json", File.READ)
 	var text = file.get_as_text()
 	file.close()

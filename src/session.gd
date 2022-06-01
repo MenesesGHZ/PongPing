@@ -115,21 +115,13 @@ func load_game_pvai() -> void:
 	get_tree().change_scene("res://src/game/game.tscn")
 	save_session()
 
+func load_game_aivp() -> void:
+	_view = Views.AIVP
+	get_tree().change_scene("res://src/game/game.tscn")
+	save_session()
 
 func load_game_aivai() -> void:
 	_view = Views.AIVAI
-	get_tree().change_scene("res://src/game/game.tscn")
-	save_session()
-
-
-func load_game_aivaip() -> void:
-	_view = Views.AIVAIP
-	get_tree().change_scene("res://src/game/game.tscn")
-	save_session()
-
-
-func load_game_aipvaip() -> void:
-	_view = Views.AIPVAIP
 	get_tree().change_scene("res://src/game/game.tscn")
 	save_session()
 
@@ -143,8 +135,7 @@ func _get_session() -> Dictionary:
 	}
 	
 	for property in get_property_list():
-		if property["usage"] == 8192\
-				and not (property["name"].begins_with("_")):
+		if property["usage"] == 8192 and not property["name"].begins_with("_"):
 			session[property["name"]] = get(property["name"])
 	
 	return session

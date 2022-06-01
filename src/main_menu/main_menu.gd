@@ -16,12 +16,8 @@ func _on_AIVSAI_pressed():
 	Session.load_game_aivai()
 
 
-func _on_AIVSAIPlus_pressed():
-	Session.load_game_aivaip()
-
-
-func _on_AIPVSAIP_pressed():
-	Session.load_game_aipvaip()
+func _on_AIVSP2_pressed():
+	Session.load_game_aivp()
 
 
 func _on_Settings_pressed():
@@ -30,3 +26,7 @@ func _on_Settings_pressed():
 
 func _on_GitHub_pressed():
 	OS.shell_open("https://github.com/MenesesGHZ/PongPing")
+
+
+func _on_AIVSP2_presse():
+	pass # Replace with function body.
