@@ -13,9 +13,8 @@ enum Views {
 	MAIN_MENU,
 	PVP,
 	PVAI,
+	AIVP,
 	AIVAI,
-	AIVAIP,
-	AIPVAIP,
 }
 
 

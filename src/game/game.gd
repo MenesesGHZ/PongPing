@@ -36,11 +36,11 @@ func _ready() -> void:
 		Session.Views.AIVP:
 			setup_AIVP()
 			_pong.ai_type = _pong.AiTypes.QLEARNING
-			_ping.ai_type = _ping.AiTypes.QLEARNING
-		Session.Views.AIVAIP:
+			_ping.ai_type = _ping.AiTypes.NONE
+		Session.Views.AIVAI:
 			setup_AIVAI()
 			_pong.ai_type = _pong.AiTypes.QLEARNING
-			_ping.ai_type = _ping.AiTypes.QLEARNING_PLUS
+			_ping.ai_type = _ping.AiTypes.QLEARNING
 
 
 ## Private Methods
