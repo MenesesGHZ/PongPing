@@ -248,13 +248,5 @@ polygon = PoolVector2Array( -21, -50, -43, -50, -57, -43, -64, -21, -64, 21, -57
 position = Vector2( 60, 0 )
 rotation = 4.71239
 enabled = true
-cast_to = Vector2( 0, 800 )
-collision_mask = 2
-
-[node name="RayCast2D_2" type="RayCast2D" parent="."]
-visible = false
-position = Vector2( 60, 0 )
-rotation = 4.71239
-enabled = true
-cast_to = Vector2( 0, 800 )
+cast_to = Vector2( 0, 1000 )
 collision_mask = 2

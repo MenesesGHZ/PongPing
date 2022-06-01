@@ -27,18 +27,20 @@ var past_discrete_position
 var past_state # agent.generate_state + environment.generate_state
 
 func generate_state() -> Array:
+	var in_sight = player.can_shoot() and player.rayCast2D_1.is_colliding()
 	var state = [
 		generate_position_state(),    # 24 combinations
 		generate_rotation_state(),    # 16 combinations 
-		int(player.can_shoot()),	  # 2 combinations
+		int(in_sight),	 			  # 2 combinations
 		int(player.ai_flag_shielded), # 2 combinations
 		int(player.ai_flag_died),	  # 2 combinations
 		int(player.ai_flag_won),	  # 2 combinations
 	]
-	return state # 6,144 combinations 
+	return state # 6,144 combinations -> 1,536 real combinations
 	
 func reset_ai_flags() -> void:
 	player.ai_flag_shielded = false
+	player.ai_flag_hit = false
 	player.ai_flag_died = false
 	player.ai_flag_won = false
 	
@@ -124,7 +126,7 @@ func save_brain(global_metadata, agent_metadata):
 		"global_metadata": global_metadata,
 		"agent_metadata": agent_metadata,
 	}
-	file.open("res://src/game/ai/brain/" + get_name() + "_" + str(global_metadata["matches_counter"]) + ".json", File.WRITE)
+	file.open("res://src/game/ai/brain/" + get_name() + "_" + str(agent_metadata["lose_counter"]) + ".json", File.WRITE)
 	file.store_string(JSON.print(brain))
 	file.close()
 	
@@ -137,7 +139,7 @@ func load_brain(epoch: int):
 	policy = brain["policy"]
 	return [brain["global_metadata"], brain["agent_metadata"]]
 
-func init(epoch: int):
+func init(_epoch: int):
 	past_discrete_rotation = round(fmod(player.rotation_degrees + 180, 360) / 45)
 	past_discrete_position = round((player.position.y - 80) / 88)
-	return load_brain(epoch)
+	#return load_brain(epoch)

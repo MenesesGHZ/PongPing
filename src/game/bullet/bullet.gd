@@ -29,18 +29,19 @@ func compute_impulse(rotation_degrees: float) -> Vector2:
 	var impulse = Vector2(cos(radians), sin(radians))
 	return initial_impulse * impulse
 
-
-
 ## Private Methods
 func _on_body_entered(body : Node):
 	var core_hitted = body.has_node("CollisionShape2D")
 	if core_hitted and body.is_in_group("Players"):
 		body.hit()
 		if body != player_owner:
+			player_owner.ai_flag_hit = true
 			player_owner.ai_flag_won = true
 		else:
 			player_owner.ai_flag_died = true
-	if body.is_in_group("Shields"): 
+	elif body.is_in_group("Shields"):
+		if body != player_owner.get_node("StaticBody2D"):
+			player_owner.ai_flag_hit = true
 		body.get_parent().ai_flag_shielded = true
 	
 

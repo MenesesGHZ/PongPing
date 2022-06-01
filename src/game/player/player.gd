@@ -13,7 +13,6 @@ signal died(this)
 const Bullet = preload("res://src/game/bullet/bullet.tscn")
 
 
-
 ## Enums
 enum PlayerStates {
 	IDLE,
@@ -54,6 +53,7 @@ var ai_flag_won := false
 
 var ai_flag_shielded := false
 
+var ai_flag_hit := false
 
 
 ## Private Variables
@@ -71,7 +71,6 @@ onready var bullet_spawn : Position2D = get_node("BulletSpawn")
 
 onready var rayCast2D_1 = $RayCast2D_1
 
-onready var rayCast2D_2 = $RayCast2D_2
 
 ## Built-In Virtual Methods
 func _ready() -> void:
@@ -84,9 +83,6 @@ func _ready() -> void:
 		bullet.player_owner = self
 		_bullets.append(bullet)
 	
-	
-
-		
 	
 func _process(delta : float) -> void:
 	if Engine.editor_hint or _player_state == PlayerStates.DYING:
@@ -112,21 +108,6 @@ func _process(delta : float) -> void:
 	else:
 		position.x = 896
 	position.y = clamp(position.y, 80, 520)
-	
-	if rayCast2D_1.is_colliding():
-		print("yes")
-		rayCast2D_2.enabled = true
-		rayCast2D_2.visible = true
-		var laser_coll_point = rayCast2D_1.get_collision_point()
-		var laser_coll_normal = rayCast2D_1.get_collision_normal()
-		rayCast2D_2.global_position = laser_coll_point
-		var forward = laser_coll_point - rayCast2D_1.global_position
-		var reflection = -forward.reflect(laser_coll_normal)
-		rayCast2D_2.global_rotation = reflection.angle()
-	else:
-		rayCast2D_2.enabled = false
-		rayCast2D_2.visible = false
-		print("No")
 
 func controller(up: bool, down: bool, rotate_right: bool, rotate_left: bool, shoot: bool):
 	var direction := Vector2.ZERO
@@ -171,7 +152,6 @@ func shoot() -> void:
 	var impulse = bullet.compute_impulse(rotation_degrees)
 	bullet.particles.direction = impulse * -1
 	bullet.apply_impulse(Vector2(0, 0), impulse)
-
 
 func hit() -> void:
 	if is_dying():

@@ -18,13 +18,17 @@ var metadata = {
 	},
 	"pong": {
 		"iteration_counter_without_die": 0,
-		"win_without_lose_counter": 0,
+		"win_counter_without_die": 0,
+		"shielded_counter_without_die": 0,
+		"hit_counter_without_die": 0,
 		"win_counter": 0,
 		"lose_counter": 0,
 	},
 	"ping": {
 		"iteration_counter_without_die": 0,
-		"win_without_lose_counter": 0,
+		"win_counter_without_die": 0,
+		"shielded_counter_without_die": 0,
+		"hit_counter_without_die": 0,
 		"win_counter": 0,
 		"lose_counter": 0,
 	}
@@ -35,11 +39,11 @@ var stuck_counter = 0 # ERROR VAR
 func _ready():
 	agent_pong.player = get_tree().root.find_node("Pong", true, false)
 	agent_ping.player = get_tree().root.find_node("Ping", true, false)
-	var metadata_pong = agent_pong.init(661)
-	var metadata_ping = agent_ping.init(662)
-	metadata["global"] = metadata_pong[0]
-	metadata["pong"] = metadata_pong[1]
-	metadata["ping"] = metadata_ping[1]
+	var metadata_pong = agent_pong.init(0)
+	var metadata_ping = agent_ping.init(0)
+	#metadata["global"] = metadata_pong[0]
+	#metadata["pong"] = metadata_pong[1]
+	#metadata["ping"] = metadata_ping[1]
 
 func Q(agent, state) -> String:
 	var s_t = parse_state(state)	
@@ -104,13 +108,13 @@ func _process(delta):
 	var agent_pong_action = Q(agent_pong, agent_pong_state)
 	var agent_ping_action = Q(agent_ping, agent_ping_state)
 	
-	agent_pong.reset_ai_flags()
-	agent_ping.reset_ai_flags()
-	
 	agent_pong.do_action(agent_pong_action, agent_pong_state)
 	agent_ping.do_action(agent_ping_action, agent_ping_state)
 	
 	update_metadata(agent_pong_state, agent_ping_state)
+	
+	agent_pong.reset_ai_flags()
+	agent_ping.reset_ai_flags()
 	
 func compute_reward(state: Array):
 	if state[5]: # if won
@@ -118,13 +122,13 @@ func compute_reward(state: Array):
 	if state[4]: # if died
 		return -10
 	if state[3]: # if shielded
-		return 1
+		return 3
 	return -0.5  # if lazy
 
 func generate_state(agent):
 	"""
 	Total number of combinations = agent states combs * environment states combs
-	T = 6,144 * 4,096 = 25,165,824
+	T = 6,144 * 512 = 3,145,728
 	"""
 	var state = []
 	state.append_array(agent.generate_state())
@@ -135,21 +139,27 @@ func update_metadata(state_1: Array, state_2: Array):
 	metadata["global"]["iteration_counter"] += 1
 	metadata["pong"]["iteration_counter_without_die"] += 1
 	metadata["ping"]["iteration_counter_without_die"] += 1
+	metadata["pong"]["shielded_counter_without_die"] += int(agent_pong.player.ai_flag_shielded)
+	metadata["ping"]["shielded_counter_without_die"] += int(agent_ping.player.ai_flag_shielded)
+	metadata["pong"]["hit_counter_without_die"] += int(agent_pong.player.ai_flag_hit)
+	metadata["ping"]["hit_counter_without_die"] += int(agent_ping.player.ai_flag_hit)
 	if state_1[4]:
 		metadata["pong"]["lose_counter"] += 1
 		metadata["ping"]["win_counter"] += 1
-		metadata["ping"]["win_without_lose_counter"] += 1
+		metadata["ping"]["win_counter_without_die"] += 1
 		metadata["global"]["matches_counter"] += 1
 		agent_pong.save_brain(metadata["global"], metadata["pong"])
 		metadata["pong"]["iteration_counter_without_die"] = 0
-		metadata["pong"]["win_without_lose_counter"] = 0
+		metadata["pong"]["win_counter_without_die"] = 0
+		metadata["pong"]["shielded_counter_without_die"] = 0
+		metadata["pong"]["hit_counter_without_die"] = 0
 	if state_2[4]:
 		metadata["ping"]["lose_counter"] += 1
 		metadata["pong"]["win_counter"] += 1
-		metadata["pong"]["win_without_lose_counter"] += 1
+		metadata["pong"]["win_counter_without_die"] += 1
 		metadata["global"]["matches_counter"] += 1
 		agent_ping.save_brain(metadata["global"], metadata["ping"])
 		metadata["ping"]["iteration_counter_without_die"] = 0
-		metadata["ping"]["win_without_lose_counter"] = 0
-
-
+		metadata["ping"]["win_counter_without_die"] = 0
+		metadata["ping"]["shielded_counter_without_die"] = 0
+		metadata["ping"]["hit_counter_without_die"] = 0
