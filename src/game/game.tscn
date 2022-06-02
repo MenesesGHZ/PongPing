@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/game/player/player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://default_env.tres" type="Environment" id=2]
+[ext_resource path="res://src/game/game.gd" type="Script" id=3]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 512, 16 )
@@ -11,6 +12,9 @@ extents = Vector2( 16, 300 )
 
 [node name="Game" type="Node2D"]
 pause_mode = 1
+script = ExtResource( 3 )
+pong = NodePath("Pong")
+ping = NodePath("Ping")
 
 [node name="Walls" type="StaticBody2D" parent="."]
 
@@ -32,12 +36,17 @@ shape = SubResource( 3 )
 
 [node name="Pong" parent="." instance=ExtResource( 1 )]
 position = Vector2( 128, 300 )
-bullets = 20
+collision_layer = 3
+collision_mask = 3
 
 [node name="Ping" parent="." instance=ExtResource( 1 )]
 position = Vector2( 896, 300 )
 rotation = 0.0
+collision_layer = 3
+collision_mask = 3
 player_type = 1
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource( 2 )
+
+[connection signal="tree_exiting" from="." to="." method="_on_Game_tree_exiting"]

@@ -8,6 +8,28 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node",
+"class": "Agent",
+"language": "GDScript",
+"path": "res://src/game/ai/agent.gd"
+}, {
+"base": "Node",
+"class": "GameEnvironment",
+"language": "GDScript",
+"path": "res://src/game/ai/environment.gd"
+}, {
+"base": "Node",
+"class": "QLearning",
+"language": "GDScript",
+"path": "res://src/game/ai/q_learning.gd"
+} ]
+_global_script_class_icons={
+"Agent": "",
+"GameEnvironment": "",
+"QLearning": ""
+}
+
 [application]
 
 config/name="PongPing"

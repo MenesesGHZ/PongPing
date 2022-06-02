@@ -11,7 +11,10 @@ enum StoryProgress {
 
 enum Views {
 	MAIN_MENU,
-	GAME,
+	PVP,
+	PVAI,
+	AIVP,
+	AIVAI,
 }
 
 
@@ -23,8 +26,6 @@ const VERSION = "0.0.0"
 
 const DEBUGGING = true
 
-
-
 ## Public Variables
 var story_progress : int = StoryProgress.NEW_GAME
 
@@ -35,6 +36,7 @@ var _new_session : Dictionary
 
 var _view : int = Views.MAIN_MENU
 
+var _q_learning : QLearning
 
 
 ## Built-In Virtual Methods
@@ -92,12 +94,13 @@ func get_currect_view() -> int:
 
 func load_main_menu() -> void:
 	_view = Views.MAIN_MENU
+	get_parent().remove_child(_q_learning)
 	get_tree().change_scene("res://src/main_menu/main_menu.tscn")
 	save_session()
 
 
 func load_game_pvp() -> void:
-	_view = Views.GAME
+	_view = Views.PVP
 	if story_progress == 0:
 		Settings.show()
 		story_progress = 1
@@ -107,25 +110,17 @@ func load_game_pvp() -> void:
 
 
 func load_game_pvai() -> void:
-	_view = Views.GAME
+	_view = Views.PVAI
 	get_tree().change_scene("res://src/game/game.tscn")
 	save_session()
 
+func load_game_aivp() -> void:
+	_view = Views.AIVP
+	get_tree().change_scene("res://src/game/game.tscn")
+	save_session()
 
 func load_game_aivai() -> void:
-	_view = Views.GAME
-	get_tree().change_scene("res://src/game/game.tscn")
-	save_session()
-
-
-func load_game_aivaip() -> void:
-	_view = Views.GAME
-	get_tree().change_scene("res://src/game/game.tscn")
-	save_session()
-
-
-func load_game_aipvaip() -> void:
-	_view = Views.GAME
+	_view = Views.AIVAI
 	get_tree().change_scene("res://src/game/game.tscn")
 	save_session()
 
@@ -139,8 +134,7 @@ func _get_session() -> Dictionary:
 	}
 	
 	for property in get_property_list():
-		if property["usage"] == 8192\
-				and not (property["name"].begins_with("_")):
+		if property["usage"] == 8192 and not property["name"].begins_with("_"):
 			session[property["name"]] = get(property["name"])
 	
 	return session
